@@ -1,4 +1,4 @@
-# Experiments and tests only (not needed to run the CLI).
+# Experiments and tests only .
 -r requirements.txt
 rembg>=2.0.60
 onnxruntime>=1.20
