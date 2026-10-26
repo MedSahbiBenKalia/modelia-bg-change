@@ -1,0 +1,13 @@
+# Runtime: what change_bg.py needs.
+# Lower bounds only, so Colab keeps its preinstalled CUDA torch.
+torch>=2.6
+torchvision>=0.21
+transformers>=4.45
+timm>=1.0
+kornia>=0.7
+einops>=0.8
+huggingface_hub>=0.25
+numpy>=1.26
+pillow>=10.0
+opencv-python-headless>=4.10
+pymatting>=1.1.12

@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Datasets are downloaded, never committed (see data/README.md)
+data/*
+!data/README.md
+!data/download.py
+
+# Model weights / caches
+*.pth
+*.onnx
+*.safetensors
+
+# Scratch outputs (final tables and figures go in results/)
+outputs/
