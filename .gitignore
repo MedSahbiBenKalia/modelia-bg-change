@@ -17,3 +17,6 @@ data/*
 
 # Scratch outputs (final tables and figures go in results/)
 outputs/
+
+#code test
+experiments/code-test.ipynb
