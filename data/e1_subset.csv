@@ -1,0 +1,56 @@
+group,source,name,image,gt,gt_type,note
+A_people,PPM-100,14996438642_58c976f957_o,e1/A_people/im/14996438642_58c976f957_o.jpg,e1/A_people/gt/14996438642_58c976f957_o.jpg,alpha,
+A_people,PPM-100,19045402063_8d68cda3e2_o,e1/A_people/im/19045402063_8d68cda3e2_o.jpg,e1/A_people/gt/19045402063_8d68cda3e2_o.jpg,alpha,
+A_people,PPM-100,24179781765_21532649fd_o,e1/A_people/im/24179781765_21532649fd_o.jpg,e1/A_people/gt/24179781765_21532649fd_o.jpg,alpha,
+A_people,PPM-100,27438080369_61ae60ab4a_o,e1/A_people/im/27438080369_61ae60ab4a_o.jpg,e1/A_people/gt/27438080369_61ae60ab4a_o.jpg,alpha,
+A_people,PPM-100,31137397232_5fbec8697b_o,e1/A_people/im/31137397232_5fbec8697b_o.jpg,e1/A_people/gt/31137397232_5fbec8697b_o.jpg,alpha,
+A_people,PPM-100,34504878700_d626a8a3c6_o,e1/A_people/im/34504878700_d626a8a3c6_o.jpg,e1/A_people/gt/34504878700_d626a8a3c6_o.jpg,alpha,
+A_people,PPM-100,35998070871_36c398b9c6_o,e1/A_people/im/35998070871_36c398b9c6_o.jpg,e1/A_people/gt/35998070871_36c398b9c6_o.jpg,alpha,
+A_people,PPM-100,40582488762_3ff469cfd2_o,e1/A_people/im/40582488762_3ff469cfd2_o.jpg,e1/A_people/gt/40582488762_3ff469cfd2_o.jpg,alpha,
+A_people,PPM-100,4082044950_d82c95164b_o,e1/A_people/im/4082044950_d82c95164b_o.jpg,e1/A_people/gt/4082044950_d82c95164b_o.jpg,alpha,
+A_people,PPM-100,4814717217_51bd4859dc_o,e1/A_people/im/4814717217_51bd4859dc_o.jpg,e1/A_people/gt/4814717217_51bd4859dc_o.jpg,alpha,
+A_people,PPM-100,48624730818_67ff3c2811_o,e1/A_people/im/48624730818_67ff3c2811_o.jpg,e1/A_people/gt/48624730818_67ff3c2811_o.jpg,alpha,
+A_people,PPM-100,49020513826_d8fffe604d_o,e1/A_people/im/49020513826_d8fffe604d_o.jpg,e1/A_people/gt/49020513826_d8fffe604d_o.jpg,alpha,
+A_people,PPM-100,49158639747_c516378273_o,e1/A_people/im/49158639747_c516378273_o.jpg,e1/A_people/gt/49158639747_c516378273_o.jpg,alpha,
+A_people,PPM-100,5568806374_e947232b97_o,e1/A_people/im/5568806374_e947232b97_o.jpg,e1/A_people/gt/5568806374_e947232b97_o.jpg,alpha,
+A_people,PPM-100,8881079923_af57ddb8df_o,e1/A_people/im/8881079923_af57ddb8df_o.jpg,e1/A_people/gt/8881079923_af57ddb8df_o.jpg,alpha,
+B_products,DIS-VD,1#Accessories#1#Bag#3811492306_4ae60c73b6_o,e1/B_products/im/1#Accessories#1#Bag#3811492306_4ae60c73b6_o.jpg,e1/B_products/gt/1#Accessories#1#Bag#3811492306_4ae60c73b6_o.png,binary,Bag
+B_products,DIS-VD,1#Accessories#1#Bag#6815402415_e01c1a41e6_o,e1/B_products/im/1#Accessories#1#Bag#6815402415_e01c1a41e6_o.jpg,e1/B_products/gt/1#Accessories#1#Bag#6815402415_e01c1a41e6_o.png,binary,Bag
+B_products,DIS-VD,1#Accessories#1#Bag#8567416130_6dba65c649_o,e1/B_products/im/1#Accessories#1#Bag#8567416130_6dba65c649_o.jpg,e1/B_products/gt/1#Accessories#1#Bag#8567416130_6dba65c649_o.png,binary,Bag
+B_products,DIS-VD,1#Accessories#2#Clothes#59929516_35b0015d09_o,e1/B_products/im/1#Accessories#2#Clothes#59929516_35b0015d09_o.jpg,e1/B_products/gt/1#Accessories#2#Clothes#59929516_35b0015d09_o.png,binary,Clothes
+B_products,DIS-VD,1#Accessories#3#Eyeglasses#17289403611_8977c33e8a_o,e1/B_products/im/1#Accessories#3#Eyeglasses#17289403611_8977c33e8a_o.jpg,e1/B_products/gt/1#Accessories#3#Eyeglasses#17289403611_8977c33e8a_o.png,binary,Eyeglasses
+B_products,DIS-VD,1#Accessories#3#Eyeglasses#4710367344_110c332442_o,e1/B_products/im/1#Accessories#3#Eyeglasses#4710367344_110c332442_o.jpg,e1/B_products/gt/1#Accessories#3#Eyeglasses#4710367344_110c332442_o.png,binary,Eyeglasses
+B_products,DIS-VD,1#Accessories#3#Eyeglasses#9172881173_3b1bb8d2b7_o,e1/B_products/im/1#Accessories#3#Eyeglasses#9172881173_3b1bb8d2b7_o.jpg,e1/B_products/gt/1#Accessories#3#Eyeglasses#9172881173_3b1bb8d2b7_o.png,binary,Eyeglasses
+B_products,DIS-VD,1#Accessories#5#Jewelry#12836143775_48611ac321_o,e1/B_products/im/1#Accessories#5#Jewelry#12836143775_48611ac321_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#12836143775_48611ac321_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#12836147075_09291d1d24_o,e1/B_products/im/1#Accessories#5#Jewelry#12836147075_09291d1d24_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#12836147075_09291d1d24_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#230388948_90f4ee4295_o,e1/B_products/im/1#Accessories#5#Jewelry#230388948_90f4ee4295_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#230388948_90f4ee4295_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#2672902168_cbb53e5c31_o,e1/B_products/im/1#Accessories#5#Jewelry#2672902168_cbb53e5c31_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#2672902168_cbb53e5c31_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#2744070193_1486582e8d_o,e1/B_products/im/1#Accessories#5#Jewelry#2744070193_1486582e8d_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#2744070193_1486582e8d_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#3085220071_13f32e823c_o,e1/B_products/im/1#Accessories#5#Jewelry#3085220071_13f32e823c_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#3085220071_13f32e823c_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#4592131110_a61d6243b0_o,e1/B_products/im/1#Accessories#5#Jewelry#4592131110_a61d6243b0_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#4592131110_a61d6243b0_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#5#Jewelry#5102999766_3df46be5af_o,e1/B_products/im/1#Accessories#5#Jewelry#5102999766_3df46be5af_o.jpg,e1/B_products/gt/1#Accessories#5#Jewelry#5102999766_3df46be5af_o.png,binary,Jewelry
+B_products,DIS-VD,1#Accessories#6#Ring#25201843020_03a3da83c7_o,e1/B_products/im/1#Accessories#6#Ring#25201843020_03a3da83c7_o.jpg,e1/B_products/gt/1#Accessories#6#Ring#25201843020_03a3da83c7_o.png,binary,Ring
+B_products,DIS-VD,1#Accessories#6#Ring#3097970069_4c2fc9fffe_o,e1/B_products/im/1#Accessories#6#Ring#3097970069_4c2fc9fffe_o.jpg,e1/B_products/gt/1#Accessories#6#Ring#3097970069_4c2fc9fffe_o.png,binary,Ring
+B_products,DIS-VD,1#Accessories#6#Ring#3110565663_ef2de9fdab_o,e1/B_products/im/1#Accessories#6#Ring#3110565663_ef2de9fdab_o.jpg,e1/B_products/gt/1#Accessories#6#Ring#3110565663_ef2de9fdab_o.png,binary,Ring
+B_products,DIS-VD,1#Accessories#7#Shoe#1498385_55e15a39eb_o,e1/B_products/im/1#Accessories#7#Shoe#1498385_55e15a39eb_o.jpg,e1/B_products/gt/1#Accessories#7#Shoe#1498385_55e15a39eb_o.png,binary,Shoe
+B_products,DIS-VD,1#Accessories#8#Watch#114334875_2f444befcc_o,e1/B_products/im/1#Accessories#8#Watch#114334875_2f444befcc_o.jpg,e1/B_products/gt/1#Accessories#8#Watch#114334875_2f444befcc_o.png,binary,Watch
+C_structure,DIS-VD,11#Furniture#5#CoatHanger#2973928525_8d85ae066d_o,e1/C_structure/im/11#Furniture#5#CoatHanger#2973928525_8d85ae066d_o.jpg,e1/C_structure/gt/11#Furniture#5#CoatHanger#2973928525_8d85ae066d_o.png,binary,coat rack with hanging clothes
+C_structure,DIS-VD,10#Frame#5#Rack#3834658574_a4af36cd8a_o,e1/C_structure/im/10#Frame#5#Rack#3834658574_a4af36cd8a_o.jpg,e1/C_structure/gt/10#Frame#5#Rack#3834658574_a4af36cd8a_o.png,binary,"thin wire racks, background visible through"
+C_structure,DIS-VD,10#Frame#5#Rack#6982605453_20cfb8c092_o,e1/C_structure/im/10#Frame#5#Rack#6982605453_20cfb8c092_o.jpg,e1/C_structure/gt/10#Frame#5#Rack#6982605453_20cfb8c092_o.png,binary,"wire shelf with shoes, cluttered background"
+C_structure,DIS-VD,10#Frame#5#Rack#IMG_20210512_231316,e1/C_structure/im/10#Frame#5#Rack#IMG_20210512_231316.jpg,e1/C_structure/gt/10#Frame#5#Rack#IMG_20210512_231316.png,binary,thin metal hooks on a light background
+C_structure,DIS-VD,14#Kitchenware#10#WineGlass#14092554090_5af6e18034_o,e1/C_structure/im/14#Kitchenware#10#WineGlass#14092554090_5af6e18034_o.jpg,e1/C_structure/gt/14#Kitchenware#10#WineGlass#14092554090_5af6e18034_o.png,binary,"transparent glass, low light"
+C_structure,DIS-VD,14#Kitchenware#10#WineGlass#4450148455_8f460f541a_o,e1/C_structure/im/14#Kitchenware#10#WineGlass#4450148455_8f460f541a_o.jpg,e1/C_structure/gt/14#Kitchenware#10#WineGlass#4450148455_8f460f541a_o.png,binary,"transparent glass, busy background"
+C_structure,DIS-VD,5#Artifact#1#Basket#3342299538_59c014a904_o,e1/C_structure/im/5#Artifact#1#Basket#3342299538_59c014a904_o.jpg,e1/C_structure/gt/5#Artifact#1#Basket#3342299538_59c014a904_o.png,binary,woven pattern (like knitwear) + strong cast shadow
+C_structure,DIS-VD,5#Artifact#1#Basket#IMG_20210518_194803,e1/C_structure/im/5#Artifact#1#Basket#IMG_20210518_194803.jpg,e1/C_structure/gt/5#Artifact#1#Basket#IMG_20210518_194803.png,binary,"mesh holes, saturated colour"
+C_structure,DIS-VD,21#Tool#18#Umbrella#8197552642_6f092320e2_o,e1/C_structure/im/21#Tool#18#Umbrella#8197552642_6f092320e2_o.jpg,e1/C_structure/gt/21#Tool#18#Umbrella#8197552642_6f092320e2_o.png,binary,"person holding an object, thin umbrella ribs"
+C_structure,DIS-VD,5#Artifact#3#Handcraft#10873642323_1bafce3aa5_o,e1/C_structure/im/5#Artifact#3#Handcraft#10873642323_1bafce3aa5_o.jpg,e1/C_structure/gt/5#Artifact#3#Handcraft#10873642323_1bafce3aa5_o.png,binary,lace-like cut-out pattern
+D_real,Wikimedia Commons (CC BY 3.0 de),D01_vintage_shoot,e1/D_real/im/D01_vintage_shoot.jpg,,none,two people outdoors; backlit hair; knitwear
+D_real,Wikimedia Commons (CC BY-SA 4.0),D02_white_sneaker,e1/D_real/im/D02_white_sneaker.jpg,,none,white product on white background
+D_real,Wikimedia Commons (CC BY-SA 4.0),D03_shirt_rack,e1/D_real/im/D03_shirt_rack.jpg,,none,many garments; no single subject
+D_real,Wikimedia Commons (CC BY-SA 2.0),D04_lace_dress,e1/D_real/im/D04_lace_dress.jpg,,none,lace fabric; cropped body; busy ground
+D_real,Wikimedia Commons (CC BY 2.0),D05_jump_white_studio,e1/D_real/im/D05_jump_white_studio.jpg,,none,flyaway blond hair on white studio background
+D_real,Wikimedia Commons (CC BY-SA 4.0),D06_logo_tshirt,e1/D_real/im/D06_logo_tshirt.jpg,,none,flat garment with a logo (packshot)
+D_real,Wikimedia Commons (CC BY 2.0),D07_hanger_shirt,e1/D_real/im/D07_hanger_shirt.jpg,,none,garment on hanger; low light; cast shadow; colour tint
+D_real,Wikimedia Commons (CC BY-SA 4.0),D08_runway_sheer_veil,e1/D_real/im/D08_runway_sheer_veil.jpg,,none,runway; white layered dress with a sheer veil (semi-transparent fabric); bouquet; long catwalk and people behind
+D_real,GTB Cup (gtbcup.com) (unknown - evaluation only; not redistributed),D09_white_on_white,e1/D_real/im/D09_white_on_white.jpeg,,none,white on white: bulky white top on a near-white studio background (border luma 238/255; image median 236) so the garment edge has almost no contrast; light blond curly hair on the same light background
+D_real,GTB Cup (gtbcup.com) (unknown - evaluation only; not redistributed),D10_low_light,e1/D_real/im/D10_low_light.jpeg,,none,low light: dark brown background and black dress (mean luma 39/255; border 27) so the lower dress edge fades into the background; bright blond flyaway curls are the high-contrast part
