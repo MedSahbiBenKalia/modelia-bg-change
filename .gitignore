@@ -23,5 +23,13 @@ data/*
 # Scratch outputs (final tables and figures go in results/)
 outputs/
 
+# E1: per-image outputs are large (kept on Drive); images without a known licence are never committed
+results/e1/alphas/
+results/e1/composites/
+results/e1/*.zip
+results/e1/timing/
+results/e1/figures/D/D09_*
+results/e1/figures/D/D10_*
+
 #code test
 experiments/code-test.ipynb
