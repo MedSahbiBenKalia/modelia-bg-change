@@ -1,0 +1,7 @@
+group,name,why
+A_people,4814717217_51bd4859dc_o,lowest mean IoU
+A_people,19045402063_8d68cda3e2_o,most disagreement
+B_products,1#Accessories#6#Ring#3097970069_4c2fc9fffe_o,lowest mean IoU
+B_products,1#Accessories#3#Eyeglasses#4710367344_110c332442_o,most disagreement
+C_structure,10#Frame#5#Rack#6982605453_20cfb8c092_o,lowest mean IoU
+C_structure,14#Kitchenware#10#WineGlass#14092554090_5af6e18034_o,most disagreement

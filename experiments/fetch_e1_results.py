@@ -1,35 +1,34 @@
-"""Copy the E1 results written on Colab (Google Drive: modelia-e1/results/) into results/e1/.
+"""Copy the E1 results of the Colab run (Google Drive: modelia-e1/results/) into results/e1/.
 
-The Drive folder is shared by link, so gdown can list and download it without a login.
-Per-image folders (alphas/, composites/) come as the zips made in section 8 of
-e1_models.ipynb and are unpacked here.
+The E1 run was made on Colab (Tesla T4), so its tables, timings and figures are the E1 results.
+Per-image alphas and composites stay on Drive. The figures are copied for viewing but not
+committed (they show dataset images, see .gitignore). The Drive folder is shared by link, so
+gdown needs no login. If Google throttles gdown ("too many accesses"), download the folder
+from the Drive web page instead.
 
     python experiments/fetch_e1_results.py
 """
-import shutil
 from pathlib import Path
 
 import gdown
 
-FOLDER_URL = "https://drive.google.com/drive/folders/1XorV6sxMkklR9busqG-He3I4Ay0qsZAO"
+FOLDER_URL = "https://drive.google.com/drive/folders/1kBxHVZqNXHGMIEhsNyoxQw_4XF3tB1xk?usp=sharing"
 OUT = Path(__file__).resolve().parents[1] / "results" / "e1"
+SKIP = ("alphas", "composites")  # per-image outputs, kept on Drive
 
 
 def main():
     files = gdown.download_folder(FOLDER_URL, skip_download=True, quiet=True)
     n = 0
     for f in files:
-        parts = Path(f.path.replace("\\", "/")).parts
-        if parts[0] != "results" or parts[1] in ("alphas", "composites"):
-            continue  # input images, or per-image files that are also in the zips
+        parts = Path(f.path.replace("\\", "/")).parts  # gdown uses the OS separator
+        if parts[0] != "results" or (len(parts) > 2 and parts[1] in SKIP):
+            continue  # input images, or per-image outputs
         dst = OUT.joinpath(*parts[1:])
         dst.parent.mkdir(parents=True, exist_ok=True)
         gdown.download(id=f.id, output=str(dst), quiet=True)
         n += 1
-    for name in ("alphas", "composites"):
-        if (OUT / f"{name}.zip").exists():
-            shutil.unpack_archive(OUT / f"{name}.zip", OUT / name)
-    print(f"{n} files -> {OUT}")
+    print(f"{n} files -> {OUT}" if n else "no results/ on Drive: has the Colab run finished?")
 
 
 if __name__ == "__main__":
