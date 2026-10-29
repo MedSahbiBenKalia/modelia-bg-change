@@ -9,6 +9,7 @@ __pycache__/
 data/*
 !data/README.md
 !data/download.py
+!data/dis-vd.md
 
 # Model weights / caches
 *.pth
