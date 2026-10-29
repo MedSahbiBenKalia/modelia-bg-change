@@ -10,6 +10,10 @@ data/*
 !data/README.md
 !data/download.py
 !data/dis-vd.md
+!data/make_e1_subset.py
+!data/e1_subset.csv
+!data/e1_subset.md
+!data/e1_fashion_sources.csv
 
 # Model weights / caches
 *.pth
