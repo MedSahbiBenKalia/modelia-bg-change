@@ -49,8 +49,14 @@ def test_output_path(photo, tmp_path, monkeypatch):
     assert load_rgb(tmp_path / "out" / "blue.jpg").size == (40, 30)
 
 
-@pytest.mark.parametrize("args", [["--color", "#12"], ["--color", "red"], []])
-def test_bad_colour_stops_before_loading_the_model(photo, monkeypatch, args):
+def test_edges_option(photo, monkeypatch):
+    monkeypatch.setattr("bgchange.segment.Segmenter", FakeSegmenter)
+    main([str(photo), "--color", "00f", "--edges", "hard"])
+    assert load_rgb(photo.with_name("photo_bg.png")).size == (40, 30)
+
+
+@pytest.mark.parametrize("args", [["--color", "#12"], ["--color", "red"], [], ["--color", "#fff", "--edges", "blur"]])
+def test_bad_arguments_stop_before_loading_the_model(photo, monkeypatch, args):
     monkeypatch.setattr("bgchange.segment.Segmenter", NoModel)
     with pytest.raises(SystemExit) as e:
         main([str(photo), *args])

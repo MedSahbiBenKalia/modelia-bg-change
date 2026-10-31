@@ -10,7 +10,8 @@ python change_bg.py input.jpg --color "#1E90FF" -o out.png --save-mask
 - `--color` takes 3- or 6-digit hex, with or without `#`.
 - `-o` defaults to `<input name>_bg.png` next to the input; `--save-mask` also writes the alpha as `<output name>_mask.png`.
 - `--device cpu` or `--device cuda` (default: cuda if available).
-- The first run downloads BiRefNet (444 MB, cached by Hugging Face). On my laptop CPU a ~3 MP photo takes about 40 s.
+- `--edges fg` (default): soft alpha + foreground colour estimation, so the old background does not leak into the hair (E2). `soft` and `hard` are kept for comparison.
+- The first run downloads BiRefNet (444 MB, cached by Hugging Face) and compiles the foreground estimation (numba, cached on disk). On my laptop CPU a ~3 MP photo takes about 40 s.
 
 ## Results
 

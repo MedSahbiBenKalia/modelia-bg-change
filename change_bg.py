@@ -7,7 +7,8 @@ import time
 from pathlib import Path
 
 from bgchange.io import load_rgb, parse_hex, save_alpha, save_rgb
-from bgchange.pipeline import change_background
+from bgchange.matting import EDGE_MODES
+from bgchange.pipeline import DEFAULT_EDGES, change_background
 
 
 def hex_colour(s: str) -> tuple[int, int, int]:
@@ -24,6 +25,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--color", type=hex_colour, required=True, help='background colour: "#1E90FF", "1e90ff" or "#fff"')
     p.add_argument("-o", "--output", type=Path, help="output image (default: <input name>_bg.png next to the input)")
     p.add_argument("--save-mask", action="store_true", help="also save the alpha as <output name>_mask.png")
+    p.add_argument("--edges", choices=EDGE_MODES, default=DEFAULT_EDGES,
+                   help="fg: soft alpha + foreground colour estimation (default, see E2); soft: soft alpha only; hard: mask at 0.5")
     p.add_argument("--device", help="cpu or cuda (default: cuda if available)")
     args = p.parse_args(argv)
     if not args.input.is_file():
@@ -40,7 +43,7 @@ def main(argv: list[str] | None = None) -> None:
     t0 = time.perf_counter()
     segmenter = Segmenter(args.device)
     t1 = time.perf_counter()
-    result = change_background(img, args.color, segmenter)
+    result = change_background(img, args.color, segmenter, args.edges)
     t2 = time.perf_counter()
 
     save_rgb(result.image, args.output)
