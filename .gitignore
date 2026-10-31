@@ -14,6 +14,9 @@ data/*
 !data/e1_subset.csv
 !data/e1_subset.md
 !data/e1_fashion_sources.csv
+!data/make_e2_subset.py
+!data/e2_subset.csv
+!data/e2_subset.md
 
 # Model weights / caches
 *.pth
@@ -30,3 +33,4 @@ results/e1/figures/
 
 #code test
 experiments/code-test.ipynb
+
