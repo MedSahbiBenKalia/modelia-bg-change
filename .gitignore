@@ -42,6 +42,13 @@ results/e2/composites/
 results/e2/figures/
 results/e2/smoke/
 
+# E3: same reasons (licences in data/e3_subset.md; DESOBA and D10 figures are never committed)
+results/e3/alphas/
+results/e3/per_image/
+results/e3/composites/
+results/e3/figures/
+results/e3/smoke/
+
 #code test
 experiments/code-test.ipynb
 

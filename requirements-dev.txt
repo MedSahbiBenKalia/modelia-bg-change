@@ -9,7 +9,7 @@ ben2 @ git+https://github.com/PramaLLC/BEN2.git
 scikit-image>=0.24
 scipy>=1.13
 pandas>=2.2
-gdown>=5.2
+gdown>=6  # older versions refuse Drive folders of more than 50 files (e3/A_synthetic/im has 225)
 psutil>=5.9
 matplotlib>=3.9
 jupyter>=1.1
