@@ -17,6 +17,10 @@ data/*
 !data/make_e2_subset.py
 !data/e2_subset.csv
 !data/e2_subset.md
+!data/make_e3_subset.py
+!data/e3_subset.csv
+!data/e3_subset.md
+!data/e3_sources.csv
 
 # Model weights / caches
 *.pth

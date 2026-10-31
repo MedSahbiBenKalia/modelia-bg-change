@@ -8,4 +8,6 @@
 | 31 Oct | 1 | CLI (`change_bg.py`) and pipeline |
 | 31 Oct | 1 | E2 data: edge-test set (15 portraits, 30 synthetic with known answer, 6 real, 1 glass), zoom picks from soft-pixel share |
 | 31 Oct | 2 | E2 edges: notebook, matting and metric code with tests, Colab T4 run, analysis, EXPERIMENTS.md entry, `--edges` option in `bgchange/pipeline.py` and `change_bg.py` (default fg), tests |
-| **Total** | **15.5** | |
+| 31 Oct | 1.25 | E3 plan (model, methods, test design) and data: 225 synthetic inputs with a known shadow, 34 DESOBA photos with a hand-removed shadow, 9 real photos; `data/make_e3_subset.py`, `data/e3_subset.md`|
+
+| **Total** | **16.75** | |
