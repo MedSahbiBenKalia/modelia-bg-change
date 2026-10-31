@@ -1,0 +1,3 @@
+step,hardware,images,median megapixels,median s per image,s per megapixel,load s,s for 2.6 MP
+BiRefNet on cuda,Tesla T4,52,10.036224,0.42330333500001416,,29.1414668660002,
+foreground estimation (S+F),Intel(R) Xeon(R) CPU @ 2.00GHz (2 threads),60,10.75802,3.82966687850012,0.3550274826483985,39.074233994,0.9230714548858362

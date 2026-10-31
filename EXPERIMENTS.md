@@ -92,3 +92,73 @@ What did not work, and caveats:
 What would change the decision: E2 or E4 showing better full-resolution edges with InSPyReNet, or a garment set with ground truth (flat-lay, hanger, on-model) that reverses the product result. Ruled out: BiRefNet_lite (3 failures out of 20 products), BiRefNet-matting (fails on objects that are not people), BEN2 (takes other objects as foreground: the desk, the clothes rail), IS-Net and U²-Net (old baselines with large failures).
 
 Figures: the hard-case grids and the D figures are in the notebook outputs and in `results/e1/figures/` (not committed). They show images from DIS-VD (DIS5K terms of use), PPM-100 (Flickr CC images; mattes CC BY-NC-SA 4.0) and Wikimedia Commons (authors and licences in `data/e1_fashion_sources.csv`). The D09 and D10 figures are never shown in the notebook.
+
+## E2 Edges: hard mask, soft alpha, or soft alpha + foreground estimation?
+
+**Idea.** At an edge pixel the photo is already a mix, I = αF + (1 − α)B (F: the subject's colour, B: the old background). Compositing the photo itself on a new colour C gives the right answer αF + (1 − α)C plus α(1 − α)(B − F): the old background leaks into the hair, even with a perfect alpha. So I compared three edge modes (`bgchange/matting.py`):
+- **H**: BiRefNet's alpha thresholded at 0.5;
+- **S**: the soft alpha, composited with the photo (the pipeline after E1);
+- **S+F**: the soft alpha, composited with the foreground colour estimated by pymatting's `estimate_foreground_ml` (Germer et al., ICPR 2020, default settings).
+
+ViTMatte refinement was left out for time. The hypotheses were written before the run (top of `experiments/e2_edges.ipynb`).
+
+**What I did.**
+- **Data** (`data/e2_subset.md`): the 15 E1 portraits (PPM-100, soft mattes) for the alpha. 30 synthetic images: each portrait used as F with its true alpha, on `#00FF00` and on `#F0F0F0`, so that the right answer on any new colour is known exactly. 6 real photos (D01, D05, D08, D09, D10, and D06 as a control) and the DIS eyeglasses, judged by eye.
+- **Metrics**, in the edge region of the ground truth (a band of 2 % of the image diagonal on both sides of the outline, plus every soft pixel), split into soft pixels (0.02 < α < 0.98, mostly hair) and the sharp rest:
+  - alpha: MAE and gradient error (Rhemann et al., CVPR 2009);
+  - colour: mean absolute RGB difference to the right answer, in 8-bit units (0 to 255), on two new colours (`#1E90FF` and white), with the true alpha (only the compositing error is left) and with BiRefNet's alpha (the real pipeline);
+  - S+F vs S per portrait: number of wins and a Wilcoxon signed-rank test.
+- **One run on Colab**: BiRefNet on the Tesla T4 (fp16), foreground estimation on its 2-thread CPU. Two checks passed: BiRefNet's full-image MAE equals E1's (largest difference 0.0000), and with the true alpha, S's measured error equals the predicted leak α(1 − α)|B − F| on every pixel of the 30 images, to 1.42 levels (rounding allows 1.5).
+
+**Result.** Tables in `results/e2/`: `e2_alpha_summary.md`, `e2_colour_summary.md`, `e2_paired.md`, `e2_speed.md`, `e2_hypotheses_numbers.md`.
+
+Alpha on the 15 portraits (mean):
+
+| | MAE soft (hair) | MAE sharp (body, clothes) | MAE edge | gradient error edge (×1000) |
+|---|---:|---:|---:|---:|
+| S (BiRefNet alpha) | 0.181 | 0.0057 | 0.018 | 0.30 |
+| H (thresholded) | 0.265 | 0.0039 | 0.024 | 0.63 |
+
+Soft pixels are 9 % of the edge area but hold 70 % of BiRefNet's alpha error there (more than their area share on 15/15). Across the portraits, BiRefNet's E1 MAE grows with the share of soft pixels (Spearman 0.84, p = 0.0001).
+
+Colour error in the soft pixels, new colour `#1E90FF` (mean over the 15 portraits, 0 to 255):
+
+| Alpha | Old background | H | S | S+F |
+|---|---|---:|---:|---:|
+| true | green | 22.0 | 16.6 | 5.6 |
+| true | near-white | 19.7 | 17.5 | 5.4 |
+| BiRefNet | green | 29.5 | 26.1 | 20.0 |
+| BiRefNet | near-white | 23.8 | 23.0 | 14.8 |
+
+On white, S+F is also the best everywhere; H beats S only when near-white is moved to white (old and new background almost the same).
+
+S+F vs S, image by image: with the true alpha S+F removes 66 to 69 % of the error (15/15 per condition, p = 6.1e-05, the smallest possible with 15 pairs). With BiRefNet's alpha it removes 14 to 41 % (better on 59 of 60 comparisons; the one loss is -3 %, the small jumping figure 35998070871 moved from near-white to white).
+
+Speed (`e2_speed.md`): BiRefNet takes 0.42 s per image on the T4 (median image 10 MP). Foreground estimation takes 0.36 s per megapixel on Colab's CPU (0.92 s for 2.6 MP) and 0.24 s per megapixel on my laptop (smoke test), where BiRefNet takes about 31 s per image. The first call of a session compiles pymatting's numba code: 39 s on Colab, once per install (numba caches it on disk).
+
+Real photos, by eye (figures in `results/e2/figures/`, not committed):
+- White backgrounds moved to near-black (D05, D09): S leaves a grey-white halo in the hair; S+F gives the hair back its own colour. Dark backgrounds moved to white (D10, D01): S leaves a brown or green haze; S+F is cleaner. H is jagged and loses the strands everywhere.
+- D06 control: inside the garment S+F differs from S by at most 1 level; the differences are on the outline only (up to 81 levels: the fringe that S+F removes). The logo is untouched.
+- Glass: the lenses keep the old background in every mode.
+
+Hypotheses:
+1. *Most of BiRefNet's remaining alpha error is in the soft pixels*: **confirmed** (70 % of the error on 9 % of the area, 15/15).
+2. *H is worse than S on hair*: **confirmed** (MAE and gradient error, 15/15). But H is better on the sharp part of the outline (15/15): BiRefNet's alpha is slightly too soft on body and clothes edges.
+3. *With the true alpha, S's error is the predicted leak, larger on green than on near-white, and S+F at least halves it*: **partly.** The formula and "at least halves" are confirmed (-66 to -69 %). "Larger on green" is rejected (16.6 vs 17.5): the leak grows with |B − F|, and dark hair is as far from near-white as from green.
+4. *With BiRefNet's alpha, S+F still beats S, by less*: **confirmed** (59/60, -14 to -41 %).
+5. *Foreground estimation takes under 4 s for 2.6 MP*: **confirmed** (0.92 s on Colab, 0.62 s on the laptop), plus the first-call compile.
+6. *D06: S+F changes the garment by at most 3 levels*: **confirmed** (1 level).
+7. *Glass fails*: **confirmed**, as expected.
+
+What did not work, and caveats:
+- **Most of the remaining error is BiRefNet's alpha, not the compositing.** With BiRefNet's alpha, S+F still has 9.5 to 27 levels of error in the hair, against about 5.5 with the true alpha. In the zoomed crops, BiRefNet's hair alpha is a smooth blur without strands. A guess, not measured: part of it comes from predicting at 1024 px and upsampling to 10 to 20 MP (the E4 question, dropped for time).
+- **Transparency is not handled.** BiRefNet makes the glass opaque, and also the sheer skirt of D08 (alpha > 0.95 on 98.9 % of a crop of the lower skirt, measured after the run), so what is seen through them stays. In D08 the zoom rule picked the bouquet (the softest alpha), so the sheer fabric was not tested at the edge.
+- **Soft pixels are not always hair**: in 49020513826 they are mostly a glass held in the hand (soft in the ground truth, opaque for BiRefNet).
+- **The colour score is not perceptual** (plain RGB differences, not a colour-difference formula such as CIEDE2000). It ranks the methods on the same pixels but does not say how visible an error is.
+- **The synthetic backgrounds are plain** (green, near-white), and in the hair the PPM-100 photos already contain some of their original background. Busy real backgrounds were only judged by eye. 15 portraits from one dataset, no confidence intervals.
+- **On a GPU server, foreground estimation (CPU) is slower than the segmentation**: 3.8 s vs 0.42 s for a ~10 MP image. On a laptop CPU it is about 2 % of the time.
+- The notebook's Wilcoxon column shows 0.0 (rounded display); the real values are in `e2_paired.md`.
+
+**Decision.** S+F becomes the default edge mode of the pipeline and the CLI (`--edges fg`; `soft` and `hard` stay available for comparison). It beats S on 59 of 60 comparisons, leaves the inside of the garment unchanged, and costs under 1 s for a 2.6 MP photo on CPU. H is ruled out for people: worse in the hair on every portrait.
+
+What would change the decision: a perceptual colour metric, or busy real backgrounds where foreground estimation makes visible artefacts. Next steps, not done: a better alpha in the hair (matting refinement such as ViTMatte with a trimap built from BiRefNet's mask, or higher-resolution inference), and transparency-aware matting for glass and sheer garments.

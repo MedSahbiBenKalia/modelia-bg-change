@@ -1,0 +1,7 @@
+- H1 soft pixels are 9 % of the edge area and hold 70 % of BiRefNet's alpha error there (mean over 15 portraits; error share > area share on 15/15)
+- H2 MAE in the soft pixels: S 0.1806 vs H 0.2646 (S lower on 15/15); gradient error x1000: S 0.301 vs H 0.631 (S lower on 15/15)
+- H3 formula check: largest gap 1.42 levels; true alpha, soft pixels, #1E90FF: on #00FF00 S 16.57 vs S+F 5.63 (S+F/S 0.34); on #F0F0F0 S 17.54 vs S+F 5.37 (S+F/S 0.31)
+- H4 BiRefNet alpha, soft pixels, S+F better than S on: #1E90FF on #00FF00: 15/15 (S 26.06, S+F 19.97, p 6.1e-05); #1E90FF on #F0F0F0: 15/15 (S 23.05, S+F 14.82, p 6.1e-05); #FFFFFF on #00FF00: 15/15 (S 31.26, S+F 26.99, p 6.1e-05); #FFFFFF on #F0F0F0: 14/15 (S 16.11, S+F 9.54, p 0.00012)
+- H5 foreground estimation: 0.92 s for 2.6 MP on Intel(R) Xeon(R) CPU @ 2.00GHz (2 threads) (threshold 3.9 s; first call 39.1 s)
+- H6 D06: max |S+F - S| inside the garment 1 levels (99.9th percentile 0.0; threshold 3)
+- H7 glass: by eye, figures/e2_glass.png
