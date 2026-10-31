@@ -31,6 +31,13 @@ results/e1/alphas/
 results/e1/composites/
 results/e1/figures/
 
+# E2: same reasons (licences in data/e2_subset.md); per-image rows and the smoke test are scratch
+results/e2/alphas/
+results/e2/per_image/
+results/e2/composites/
+results/e2/figures/
+results/e2/smoke/
+
 #code test
 experiments/code-test.ipynb
 

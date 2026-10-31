@@ -94,5 +94,7 @@ one run, this laptop's CPU) gave 0.8 s at 2.8 MP and 7.1 s at 20 MP, so there is
 
 ## Licences
 
-Same as E1 (`e1_subset.md`). The synthetic inputs are made from PPM-100 mattes (CC BY-NC-SA 4.0),
-so they and any figure showing them stay local, like the PPM-100 figures in E1.
+Same as E1 (`e1_subset.md`). The synthetic inputs are made from PPM-100 mattes (CC BY-NC-SA 4.0), so
+they are not committed. Figures follow the E1 rule: PPM-100, DIS-VD and Wikimedia Commons images are shown
+in the notebook (non-commercial evaluation, sources credited) and saved under `results/e2/figures/`,
+which is not committed; D09 and D10 (licence unknown) are saved to disk only, never shown.
