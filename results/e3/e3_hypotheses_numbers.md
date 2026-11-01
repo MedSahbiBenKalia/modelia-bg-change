@@ -1,0 +1,9 @@
+- H1 true alpha, white and dark, short shadows: shadow MAE B1 0.028 (per setting 0.027, 0.030, 0.026, 0.029); B2 0.027 (per setting 0.026, 0.026, 0.026, 0.027) (threshold 0.03)
+- H2 gradient, true alpha, false shadow on the lit background: B1 0.037; B2 0.005 (B1 > 0.05, B2 < 0.02 expected)
+- H3 long shadows, white and dark, true alpha, bias in the shadow pixels: B1 +0.022; B2 +0.135; B2 bias above B1's on 52/60 inputs
+- H4 C with the true T, shadow pixels: measured 28.63 vs predicted T(1-T)L 28.65 levels (largest per-image gap 0.21); C worse than B2 (BiRefNet alpha, background, #1E90FF) on 180/180 inputs with a shadow
+- H5 BiRefNet on the synthetic shadows: mean alpha 0.0006 (highest per setting 0.0023; threshold 0.05); B2 error in the shadow pixels, BiRefNet minus true alpha: mean +1.45 levels, largest +21.88 (threshold 2)
+- H6 shadow map seconds per image on CPU: shadow map B1 (flat): median 0.05, max 0.20; shadow map B2 (inpaint): median 0.14, max 0.51 (threshold 1 s)
+- H7 no-shadow controls, false shadow B2: BiRefNet alpha white 0.0000, dark 0.0000, gradient 0.0061; true alpha white 0.0000, dark 0.0000, gradient 0.0064 (threshold 0.01)
+- H8 DESOBA, true mask, shadow pixels: B2 better than A on 34/34 photos (A 84.29, B2 42.43 levels); B2 false shadow on the lit pixels: DESOBA 0.0193 vs A_synthetic 0.0017; other objects' shadows kept: 0.056 mean darkening
+- H9 real photos: by eye (figures/real/); D05 mean change from A on white: B1 0.74, B2 0.00 levels (threshold 2)

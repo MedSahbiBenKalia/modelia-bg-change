@@ -1,0 +1,5 @@
+step,hardware,images,median megapixels,median s,max s,first call s
+BiRefNet on cuda,Tesla T4,268,0.70144,0.4459692634999328,0.4960023870000896,31.41275063600005
+foreground estimation,Intel(R) Xeon(R) CPU @ 2.00GHz (2 threads),259,0.70144,0.26203112899997905,1.012093731999812,47.53739477300019
+shadow map B1 (flat),Intel(R) Xeon(R) CPU @ 2.00GHz (2 threads),268,0.70144,0.045547294000016336,0.19542601800003467,
+shadow map B2 (inpaint),Intel(R) Xeon(R) CPU @ 2.00GHz (2 threads),268,0.70144,0.14338761049998539,0.5052860010000586,
