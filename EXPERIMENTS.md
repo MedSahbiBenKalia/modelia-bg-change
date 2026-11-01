@@ -89,7 +89,7 @@ What did not work, and caveats:
 3. On the real photos, InSPyReNet's failure is the worse one for garments: it makes part of a black dress see-through (D10), while BiRefNet drops a hanger hook and keeps the garment whole (D07). This is one image each: a hint, not proof.
 4. The brief suggests BiRefNet ("or anything you think works better"), and this benchmark does not show that InSPyReNet works better overall. BiRefNet is MIT licensed, and the whole family loads the same way.
 
-What would change the decision: E2 or E4 showing better full-resolution edges with InSPyReNet, or a garment set with ground truth (flat-lay, hanger, on-model) that reverses the product result. Ruled out: BiRefNet_lite (3 failures out of 20 products), BiRefNet-matting (fails on objects that are not people), BEN2 (takes other objects as foreground: the desk, the clothes rail), IS-Net and U²-Net (old baselines with large failures).
+What would change the decision: E2 or E4 (later dropped for time) showing better full-resolution edges with InSPyReNet, or a garment set with ground truth (flat-lay, hanger, on-model) that reverses the product result. Ruled out: BiRefNet_lite (3 failures out of 20 products), BiRefNet-matting (fails on objects that are not people), BEN2 (takes other objects as foreground: the desk, the clothes rail), IS-Net and U²-Net (old baselines with large failures).
 
 Figures: the hard-case grids and the D figures are in the notebook outputs and in `results/e1/figures/` (not committed). They show images from DIS-VD (DIS5K terms of use), PPM-100 (Flickr CC images; mattes CC BY-NC-SA 4.0) and Wikimedia Commons (authors and licences in `data/e1_fashion_sources.csv`). The D09 and D10 figures are never shown in the notebook.
 
@@ -162,3 +162,95 @@ What did not work, and caveats:
 **Decision.** S+F becomes the default edge mode of the pipeline and the CLI (`--edges fg`; `soft` and `hard` stay available for comparison). It beats S on 59 of 60 comparisons, leaves the inside of the garment unchanged, and costs under 1 s for a 2.6 MP photo on CPU. H is ruled out for people: worse in the hair on every portrait.
 
 What would change the decision: a perceptual colour metric, or busy real backgrounds where foreground estimation makes visible artefacts. Next steps, not done: a better alpha in the hair (matting refinement such as ViTMatte with a trimap built from BiRefNet's mask, or higher-resolution inference), and transparency-aware matting for glass and sheer garments.
+
+## E3 Shadows: how to keep the subject's shadows on the new colour?
+
+**Idea.** A shadow is not part of the subject: it darkens the background. Chuang et al. (*Shadow Matting and Compositing*, SIGGRAPH 2003) write a background pixel as I = βL + (1 − β)S, with L the lit background and S the same background in full shadow. If S is the lit background dimmed (S = kL), then I / L = β + (1 − β)k = T, and on a new colour N the right pixel is T·N. So keeping shadows only needs an estimate of the lit background L, and the methods differ in that estimate (`bgchange/shadow.py`):
+- **A**: no shadow (the pipeline after E2);
+- **B1**: L is one flat level, the median luminance of the background;
+- **B2**: L is the photo with the subject and a band of 10 % of the diagonal around it filled in from outside the band (OpenCV's Telea inpainting, Telea 2004);
+- **C**: the old pixels kept as a see-through layer with opacity 1 − T (T from B2), the model Chuang et al. say "does not hold for shadows".
+
+B1 and B2 work on luminance at 512 px, fill T in under the subject (the photo shows the subject there, not its background) and ignore any darkening under 3 % (a dead zone against noise and JPEG). A strength s blends from no shadow (0) to the measured one (1). LaMa was left out: on plain backdrops L is smooth, and on textured ones the ratio fails for another reason (it copies the texture). The hypotheses and the decision rule were written before the run (top of `experiments/e3_shadows.ipynb`).
+
+**What I did.**
+- **Data** (`data/e3_subset.md`): A = 225 synthetic inputs with an exact answer: the 15 E2 portraits on 3 lit backgrounds (white 240, dark 64, and a vertical gradient from 240 to 150 standing for light falloff), each with 5 shadows (none, or the subject's own silhouette moved by 2 % or 12 % of the diagonal, hard or soft, half the light in its core), plus noise of σ = 2 levels. B = the 34 DESOBA test photos (Hong et al., AAAI 2022) with one object and its shadow; the answer comes from the same photo with the shadow removed by hand. D = 9 real fashion photos judged by eye (6 from E1, 3 new from Wikimedia Commons).
+- **Metrics**, on the background pixels (true alpha < 0.02), split into shadow pixels (T < 0.98) and lit pixels: for the shadow map, MAE and bias in the shadow and false shadow (mean darkening) on the lit pixels; for the output, the colour error against the exact answer on `#1E90FF` and white, in grey levels. Every method ran with the true alpha (only the shadow error is left) and with BiRefNet's alpha plus foreground estimation (the pipeline). Paired comparisons per portrait (A) or photo (B), with a Wilcoxon signed-rank test, and a check of the dead zone, the band and the strength, one value at a time.
+- **One run on Colab**: BiRefNet on the Tesla T4, shadow maps and foreground estimation on its 2-thread CPU. Two checks passed: with the true alpha and the true T the output is the exact answer (error 0), and C with the true T gives the predicted leak T(1 − T)L (28.63 measured vs 28.65 predicted grey levels in the synthetic shadow pixels).
+- Before the run I tried the code on one portrait, to find bugs. It found one: OpenCV 5.0's Telea inpainting leaves about half of a large float32 hole unfilled (stripes), which drew a dark halo around the subject; `bgchange/shadow.py` now inpaints through uint16. Hypotheses 7 and 8, and the alpha each hypothesis is judged with, were written after that try; the notebook says so.
+
+**Result.** Tables in `results/e3/`: `e3_colour_summary.md`, `e3_map_summary.md`, `e3_paired.md`, `e3_sensitivity.md`, `e3_birefnet_on_shadows.md`, `e3_real.md`, `e3_speed.md`, `e3_hypotheses_numbers.md`.
+
+Background error against the exact answer, BiRefNet's alpha, on `#1E90FF` (mean, grey levels):
+
+| Inputs | n | A none | B1 flat | B2 inpaint | C layer |
+|---|---:|---:|---:|---:|---:|
+| A, short shadows, all backgrounds | 90 | 2.95 | 2.51 | **0.69** | 2.49 |
+| A, long shadows, white and dark | 60 | 12.20 | **0.78** | 5.19 | 9.16 |
+| A, long shadows, gradient | 30 | 12.20 | 5.72 | 5.61 | 10.41 |
+| A, no shadow, white and dark | 30 | 0.02 | 0.02 | 0.02 | 0.02 |
+| A, no shadow, gradient | 15 | **0.02** | 6.81 | 0.88 | 0.54 |
+| A, all | 225 | 6.06 | 2.43 | 2.47 | 4.87 |
+| B DESOBA, background | 34 | 6.19 | 14.00 | 6.71 | 6.56 |
+| B DESOBA, shadow pixels only | 34 | 83.89 | 13.18 | 42.57 | 54.08 |
+
+Shadow maps, true alpha (bias > 0: the shadow is too light or missed):
+
+| Inputs | bias B1 | bias B2 | false shadow B1 | false shadow B2 |
+|---|---:|---:|---:|---:|
+| A, short shadows, white and dark | +0.025 to +0.030 | +0.025 to +0.027 | 0.000 | 0.000 |
+| A, long shadows, white and dark | +0.018 to +0.026 | +0.121 to +0.148 | 0.000 | 0.000 |
+| A, gradient (any shadow, or none) | −0.035 to −0.013 | +0.005 to +0.137 | 0.027 to 0.047 | 0.004 to 0.006 |
+| B DESOBA | +0.041 | +0.282 | 0.093 | 0.019 |
+
+BiRefNet almost never takes the shadow for the subject: mean alpha 0.0006 on the synthetic shadow pixels (highest setting 0.0023), 0.0088 on DESOBA. With a perfect shadow map (B\*) and BiRefNet's alpha, the background error would be 0.02 levels on A and 0.15 on B: the error left is the shadow map's.
+
+Real photos (BiRefNet's alpha, no ground truth): share of the background each map darkens, and the mean change from A on white (grey levels):
+
+| Photo | B1 | B2 |
+|---|---|---|
+| D02 sneaker, contact shadow | 30.8 %, 5.5 | 3.5 %, 1.9 |
+| D13 belt, drop shadow | 4.3 %, 1.7 | 4.4 %, 1.7 |
+| D11 cyclorama, soft shadow | 8.6 %, 1.0 | 0.6 %, 0.1 |
+| D12 grey studio, contact shadows | 11.1 %, 1.5 | 0.5 %, 0.1 |
+| D07 hanger, light falloff | 41.9 %, 20.7 | 9.2 %, 3.5 |
+| D10 low light, vignette | 45.4 %, 35.6 | 5.1 %, 2.8 |
+| D04 textured ground | 50.5 %, 36.2 | 32.0 %, 20.5 |
+| D05 control (almost no shadow) | 6.4 %, 0.7 | 0.0 %, 0.0 |
+| D06 t-shirt, faint shadow | 0 %, 0 | 0 %, 0 |
+
+By eye (`results/e3/figures/real/`, not committed): B2 keeps the contact shadow of D02, the drop shadow of D13 and the shadow at the feet of D11, and leaves the rest of the backdrop plain. B1 keeps the same shadows but also darkens the corners of D02, D07, D10 and D12, where the light falls off. On D04 both copy the leaves and soil into the new colour. C leaves grey see-through patches on the blue (clearest on the synthetic inputs). On D06 nothing is darkened: any shadow there is fainter than the dead zone.
+
+Speed (Colab's CPU, images up to 5.5 MP): B2 takes 0.14 s per image (median; at most 0.51 s), B1 0.05 s, against 0.45 s for BiRefNet on the T4 and 0.26 s for foreground estimation.
+
+Hypotheses:
+1. *True alpha, flat backgrounds, short shadows: MAE < 0.03*: **confirmed, at the edge.** 7 of the 8 setting means are under 0.03; B1 on dark short_soft is at 0.0303. Almost all of that error is the dead zone's bias (+0.025 to +0.030): with no dead zone, B1's MAE on white is 0.004.
+2. *Gradient: B1 false shadow > 0.05, B2 < 0.02*: **partly.** B2: 0.005, confirmed. B1: 0.037, a clear false shadow (7 times B2's) but under the 0.05 I predicted.
+3. *Long shadows: B2's bias larger than B1's*: **confirmed.** +0.135 vs +0.022, larger on 52 of 60 inputs. B2 keeps only the part of the shadow inside its band, and the shadow stops with a visible edge (`figures/e3_A_48624730818.png`).
+4. *C's error is T(1 − T)L, and C is worse than B2 on every synthetic image with a shadow*: **confirmed.** The formula holds to 0.21 level per image (tolerance 0.5); C is worse on 180/180.
+5. *BiRefNet takes little of the shadow (alpha < 0.05); B2's colour error within 2 levels of the true-alpha one*: **confirmed for the alpha, partly for the colour.** The gap is +1.45 levels on average but above 2 levels on 30 of 180 inputs, all with long shadows (up to +21.9): with BiRefNet's alpha, B2 misses more of a long shadow (bias +0.153 vs +0.131). Cause not measured; a guess: the band is drawn from the alpha, so a slightly different alpha moves it.
+6. *Shadow map under 1 s on CPU*: **confirmed** (0.51 s at most).
+7. *No-shadow controls: B2 false shadow < 0.01*: **confirmed**: 0.000 on white and dark, 0.006 on the gradient. In colour, B2 still adds 0.9 levels on the gradient without a shadow (A: 0.02).
+8. *DESOBA: B2 beats A in the shadow pixels on at least 28 of 34, with more false shadow than on the synthetic backgrounds*: **confirmed.** 34/34 (42.4 vs 84.3 levels, true mask), and its false shadow is 11 times the synthetic one (0.019 vs 0.0017).
+9. *Real photos*: **confirmed.** Both methods copy D04's texture; B2 changes D05 by 0.00 levels; B1 darkens 42-45 % of D07's and D10's backgrounds, B2 5-9 %.
+
+What did not work, and caveats:
+- **Long shadows (B2).** Whatever lies farther from the subject than the band is taken as lit, so the shadow stops with a visible edge. On the plain backgrounds B1 is 6.7 times better there (0.78 vs 5.19 levels; B2 better on 6 of 60). A wider band does not fix it: at 20 % of the diagonal, B2 gets better on plain backgrounds (1.28 vs 1.87 levels, true alpha) but worse on the gradient (5.07 vs 2.50) and on DESOBA (9.19 vs 6.54).
+- **Textured backgrounds.** A ratio to a smooth L copies the texture: D04, and DESOBA's lit pixels (B2 2.9 levels, B1 13.5, A 0.15). On DESOBA as a whole, B2 is not better than no shadow (6.71 vs 6.19 levels; better on 14 of 34, p = 0.48), although it halves the error in the shadow pixels.
+- **Every kept shadow is a little too light.** The 3 % dead zone shrinks the darkening (bias about +0.025 on short shadows); that is the price of a plain lit background (with no dead zone, the noise alone gives a false shadow of 0.001-0.003). Shadows fainter than 3 % disappear (D06).
+- **Other objects' shadows** inside the band are kept (DESOBA: mean darkening 0.056 for B2, 0.44 for B1).
+- **Strength.** On A the error falls steadily up to s = 1; on DESOBA it rises from 6.08 (s = 0) to 6.54 (s = 1): with texture, every bit of "shadow" adds error.
+- **The synthetic shadows are idealised**: a moved silhouette on a wall behind the subject, grey, one darkness, plain noise. There is no floor shadow with a known answer. DESOBA's answer is a hand edit measured as a luminance ratio, so coloured shadows are not scored; its scenes are outdoor, with binary masks.
+- **Two OpenCV versions** (5.0 locally, 4.14 on Colab); inpainting through uint16 runs the same code path on both.
+
+**Decision.** `--keep-shadows` uses B2. It is off by default, the strength is 1 by default, and B1 stays available as `--shadow-method flat`. The dead zone (3 %) and the band (10 %) are unchanged.
+1. B1 and B2 tie on the 225 synthetic inputs (2.43 vs 2.47 levels; B2 better on 10 of 15 portraits, p = 0.72). The rule written before the run sends a tie to B1, but it also excludes a method with a false shadow above 0.02 on a studio backdrop, and B1 has 0.037 on the gradient (up to 0.048 in one setting). The rule did not say which part comes first; I applied the exclusion first, because it was there to protect studio backdrops. Light falloff is common on them (D07, D10, D12), B1 turns it into a darker backdrop over 42-45 % of D07 and D10, and B2's failure (long shadows) is rarer in soft studio light.
+2. Off by default: keeping shadows adds error where there is none to keep (a gradient without a shadow: 0.88 vs 0.02 levels) and gives no gain on textured backgrounds (DESOBA). The brief asks for a parameter.
+3. Strength 1: the rule changes it only if s < 1 is best on both A and B, and on A, s = 1 is best.
+4. The dead zone and the band stay as set: no other value is better on both A and B.
+5. `--shadow-method flat` is kept because B1 is much better in the one case where B2 fails, long shadows on a plain backdrop (0.78 vs 5.19 levels). C is ruled out.
+
+What would change the decision: studio photos with long hard shadows and a known answer (B1 would win there), or a lit-background estimate that follows the shadow past a fixed band without taking light falloff for shadow. Next steps, not done: a hybrid (a flat L when the backdrop is uniform, inpainted otherwise), detecting the subject's own shadow on busy backgrounds (instance shadow detection, SOBA, Wang et al. CVPR 2020), and a per-channel ratio for coloured shadows.
+
+
+
