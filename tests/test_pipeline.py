@@ -49,3 +49,21 @@ def test_default_edges_remove_the_old_background():
 def test_hard_edges_return_a_binary_mask():
     result = change_background(red_on_green(), (0, 0, 255), ramp, "hard")
     assert set(np.unique(result.alpha)) <= {0.0, 1.0}
+
+
+def shadow_photo():
+    # Subject on the left half, a shadow (half the light) in the 8 px next to it, a plain grey background.
+    x = np.full((60, 80, 3), 200, np.uint8)
+    x[:, :40] = (200, 100, 50)
+    x[:, 41:49] = 100
+    return Image.fromarray(x)
+
+
+def test_shadows_are_kept_only_when_asked():
+    plain = np.asarray(change_background(shadow_photo(), (0, 0, 255), left_half).image)
+    assert (plain[:, 40:] == (0, 0, 255)).all()  # default: a plain colour
+    kept = np.asarray(change_background(shadow_photo(), (0, 0, 255), left_half, shadow_strength=1).image)
+    assert np.abs(kept[10:50, 43:47, 2].astype(int) - 128).max() <= 8  # the shadow: about half of 255
+    assert (kept[:, 60:] == (0, 0, 255)).all()  # the lit background stays plain
+    half = np.asarray(change_background(shadow_photo(), (0, 0, 255), left_half, shadow_strength=0.5).image)
+    assert kept[10:50, 43:47, 2].mean() < half[10:50, 43:47, 2].mean() < 255

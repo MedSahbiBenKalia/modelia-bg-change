@@ -55,7 +55,24 @@ def test_edges_option(photo, monkeypatch):
     assert load_rgb(photo.with_name("photo_bg.png")).size == (40, 30)
 
 
-@pytest.mark.parametrize("args", [["--color", "#12"], ["--color", "red"], [], ["--color", "#fff", "--edges", "blur"]])
+def test_keep_shadows(tmp_path, monkeypatch):
+    monkeypatch.setattr("bgchange.segment.Segmenter", FakeSegmenter)
+    x = np.full((60, 80, 3), 200, np.uint8)
+    x[:, 41:49] = 100  # a shadow next to the subject (the left half)
+    photo = tmp_path / "shadow.png"
+    Image.fromarray(x).save(photo)
+    main([str(photo), "--color", "00f"])
+    assert (np.asarray(load_rgb(tmp_path / "shadow_bg.png"))[:, 40:] == (0, 0, 255)).all()  # off by default
+    main([str(photo), "--color", "00f", "--keep-shadows", "--shadow-strength", "1", "--shadow-method", "flat"])
+    out = np.asarray(load_rgb(tmp_path / "shadow_bg.png"))
+    assert out[10:50, 43:47, 2].mean() < 160 and (out[:, 60:] == (0, 0, 255)).all()
+
+
+@pytest.mark.parametrize("args", [["--color", "#12"], ["--color", "red"], [], ["--color", "#fff", "--edges", "blur"],
+                                  ["--color", "#fff", "--shadow-strength", "0.5"],  # needs --keep-shadows
+                                  ["--color", "#fff", "--keep-shadows", "--shadow-strength", "1.5"],
+                                  ["--color", "#fff", "--keep-shadows", "--shadow-strength", "nan"],
+                                  ["--color", "#fff", "--keep-shadows", "--shadow-method", "lama"]])
 def test_bad_arguments_stop_before_loading_the_model(photo, monkeypatch, args):
     monkeypatch.setattr("bgchange.segment.Segmenter", NoModel)
     with pytest.raises(SystemExit) as e:
