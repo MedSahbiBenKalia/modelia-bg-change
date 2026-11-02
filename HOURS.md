@@ -11,4 +11,5 @@
 | 31 Oct | 1.25 | E3 plan (model, methods, test design) and data: 225 synthetic inputs with a known shadow, 34 DESOBA photos with a hand-removed shadow, 9 real photos; `data/make_e3_subset.py`, `data/e3_subset.md`|
 | 31 Oct | 1.5 | E3 code: `bgchange/shadow.py` (B1 flat and B2 inpainted shadow maps, strength) with tests, `over_colour` shade, `experiments/e3_shadows.ipynb` (methods A/B1/B2/C, true and BiRefNet alpha, sensitivity, figures, Drive results)|
 | 1 Nov | 1.5 | E3 run on Colab (T4), results, analysis, EXPERIMENTS.md entry, decision (B2, off by default, strength 1), `--keep-shadows`, `--shadow-strength`, `--shadow-method` in `bgchange/pipeline.py` and `change_bg.py` with tests, README; E4 dropped for time (empty skeleton removed) |
-| **Total** | **19.75** | |
+| 2 Nov | 1.5 | README: results table, examples on two test photos (with and without shadow), what still fails, related work (3 references checked online), AI-usage table, what I would do next|
+| **Total** | **21.25** | |
