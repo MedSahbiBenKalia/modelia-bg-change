@@ -6,6 +6,7 @@
 import argparse
 import time
 from pathlib import Path
+import numpy as np
 
 from bgchange.io import load_rgb, parse_hex, save_alpha, save_rgb
 from bgchange.matting import EDGE_MODES
@@ -35,7 +36,7 @@ def strength(s: str) -> float:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Put the subject of an image on a solid background colour.")
     p.add_argument("input", type=Path, help="image of a person or a product")
-    p.add_argument("--color", type=hex_colour, required=True, help='background colour: "#1E90FF", "1e90ff" or "#fff"')
+    #p.add_argument("--color", type=hex_colour, required=True, help='background colour: "#1E90FF", "1e90ff" or "#fff"')
     p.add_argument("-o", "--output", type=Path, help="output image (default: <input name>_bg.png next to the input)")
     p.add_argument("--save-mask", action="store_true", help="also save the alpha as <output name>_mask.png")
     p.add_argument("--edges", choices=EDGE_MODES, default=DEFAULT_EDGES,
@@ -50,6 +51,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         "shadows longer than 10 %% of the image diagonal; flat keeps long shadows on a plain backdrop "
                         "but takes light falloff for shadow")
     p.add_argument("--device", help="cpu or cuda (default: cuda if available)")
+
+    g=p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--color", type=hex_colour, help='background colour: "#1E90FF", "1e90ff" or "#fff"')
+    g.add_argument("--bg-image", type=Path, help="background image")
+
     args = p.parse_args(argv)
     if not args.input.is_file():
         p.error(f"input not found: {args.input}")  # now, not after loading the model
@@ -67,6 +73,15 @@ def main(argv: list[str] | None = None) -> None:
 
     img = load_rgb(args.input)
     t0 = time.perf_counter()
+
+    bg_image=args.bg_image
+    if(bg_image is not None):
+        raise NotImplementedError("Background image support is not implemented yet. Please use --color instead.")
+
+
+    bg = args.color if args.color is not None else load_rgb(args.bg_image)
+
+
     segmenter = Segmenter(args.device)
     t1 = time.perf_counter()
     result = change_background(img, args.color, segmenter, args.edges, args.shadow_strength, args.shadow_method)
