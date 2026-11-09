@@ -42,5 +42,7 @@ class Segmenter:
         rgb = img if img.mode == "RGB" else img.convert("RGB")
         x = to_tensor(rgb).unsqueeze(0).to(self.device, self.dtype)
         logits = self.model(x)[-1]  # list of side outputs, the last one is the final prediction
+        
         alpha = F.interpolate(logits.sigmoid(), size=(img.height, img.width), mode="bilinear", align_corners=False)
+        mask = alpha > 0.5 
         return alpha[0, 0].float().cpu().numpy()
